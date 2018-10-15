@@ -14,6 +14,10 @@ namespace opencv_test { namespace {
 TEST(DISABLED_VideoIO_Camera, basic)
 {
     VideoCapture capture(0);
+    //the following property is for H/W CV710
+    cap.set(CAP_PROP_FRAME_WIDTH, 1920);
+    cap.set(CAP_PROP_FRAME_HEIGHT, 1080);
+    cap.set(CAP_CROSSBAR_INPIN_TYPE , 6);    
     ASSERT_TRUE(capture.isOpened());
     std::cout << "Camera 0 via " << capture.getBackendName() << " backend" << std::endl;
     std::cout << "Frame width: " << capture.get(CAP_PROP_FRAME_WIDTH) << std::endl;
