@@ -4776,6 +4776,10 @@ public:
 
     void deallocate_(UMatData* u) const
     {
+#ifdef _WIN32
+        if (cv::__termination)  // process is not in consistent state (after ExitProcess call) and terminating
+            return;             // avoid any OpenCL calls
+#endif
         if(u->tempUMat())
         {
             CV_Assert(u->origdata);
@@ -6001,6 +6005,7 @@ const char* typeToStr(int type)
         "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?"
     };
     int cn = CV_MAT_CN(type), depth = CV_MAT_DEPTH(type);
+    CV_Assert(depth != CV_16F);  // Workaround for: https://github.com/opencv/opencv/issues/12824
     return cn > 16 ? "?" : tab[depth*16 + cn-1];
 }
 
@@ -6018,6 +6023,7 @@ const char* memopTypeToStr(int type)
         "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?"
     };
     int cn = CV_MAT_CN(type), depth = CV_MAT_DEPTH(type);
+    CV_Assert(depth != CV_16F);  // Workaround for: https://github.com/opencv/opencv/issues/12824
     return cn > 16 ? "?" : tab[depth*16 + cn-1];
 }
 
@@ -6035,6 +6041,7 @@ const char* vecopTypeToStr(int type)
         "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?"
     };
     int cn = CV_MAT_CN(type), depth = CV_MAT_DEPTH(type);
+    CV_Assert(depth != CV_16F);  // Workaround for: https://github.com/opencv/opencv/issues/12824
     return cn > 16 ? "?" : tab[depth*16 + cn-1];
 }
 
